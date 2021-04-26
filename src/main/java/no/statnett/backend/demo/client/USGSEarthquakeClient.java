@@ -26,7 +26,8 @@ public class USGSEarthquakeClient {
             log.info("calling with url: {}", url);
             earthQuakeCollection = restTemplate.getForObject(url, EarthQuakeCollection.class);
         } catch (Exception e ) {
-            System.out.println(e.getMessage());
+            log.error("An error occurred when trying to fetch data : {}", e.getMessage() );
+            throw e;
         }
         return earthQuakeCollection;
     }
