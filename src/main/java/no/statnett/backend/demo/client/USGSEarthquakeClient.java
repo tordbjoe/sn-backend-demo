@@ -2,8 +2,10 @@ package no.statnett.backend.demo.client;
 
 import lombok.extern.slf4j.Slf4j;
 import no.statnett.backend.demo.domain.api.EarthQuakeCollection;
+import no.statnett.backend.demo.exception.ApiException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -20,16 +22,17 @@ public class USGSEarthquakeClient {
     }
 
     public EarthQuakeCollection getEarthquakes() {
-        EarthQuakeCollection earthQuakeCollection = null;
         try {
             String url = getUrl();
             log.info("calling with url: {}", url);
-            earthQuakeCollection = restTemplate.getForObject(url, EarthQuakeCollection.class);
+            return restTemplate.getForObject(url, EarthQuakeCollection.class);
+        } catch (RestClientException rce) {
+            log.error("An error occurred when trying to fetch data : {}", rce.getMessage() );
+            throw new ApiException("An error occurred when trying to fetch data from usgs, please try again in a minute");
         } catch (Exception e ) {
             log.error("An error occurred when trying to fetch data : {}", e.getMessage() );
             throw e;
         }
-        return earthQuakeCollection;
     }
 
     private String getUrl() {

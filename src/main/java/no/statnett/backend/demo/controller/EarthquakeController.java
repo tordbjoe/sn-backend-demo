@@ -23,13 +23,9 @@ public class EarthquakeController {
 
     @GetMapping(value = "api/earthquakes", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Earthquake>> getEarthquakes() {
-        try {
             log.debug("incoming request");
             List<Earthquake> response = earthquakeService.getEarthquakes();
             return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
 }

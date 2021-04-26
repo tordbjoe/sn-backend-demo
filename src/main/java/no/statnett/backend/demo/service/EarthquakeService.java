@@ -27,11 +27,11 @@ public class EarthquakeService {
         List<Earthquake> earthquakes = new ArrayList<>();
         for (Features features : earthQuakeCollection.getFeatures()) {
             Earthquake earthquake = new Earthquake();
-            earthquake.setId(features.getId());
-            earthquake.setTime(features.getProperties().getTime());
-            earthquake.setPlace(features.getProperties().getPlace());
-            earthquake.setMagnitude(features.getProperties().getMagnitude());
-            earthquake.setGeometry(features.getGeometry());
+            earthquake.setId(features.getId() != null ? features.getId() : null);
+            earthquake.setTime(features.getProperties().getTime() != null ? features.getProperties().getTime() : null);
+            earthquake.setPlace(features.getProperties().getPlace() != null ? features.getProperties().getPlace() : null);
+            earthquake.setMagnitude(features.getProperties().getMagnitude() != null ? features.getProperties().getMagnitude() : null);
+            earthquake.setGeometry(features.getGeometry() != null ? features.getGeometry() : null);
             earthquakes.add(earthquake);
         }
         return earthquakes;
