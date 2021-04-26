@@ -1,0 +1,66 @@
+plugins {
+    id 'org.springframework.boot' version '2.4.5'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group = 'no.statnett.backend.demo'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    integrationTest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+        java {
+            srcDirs = ['src/integrationTest/java']
+        }
+        resources {
+            srcDirs = ['src/integrationTest/resources']
+        }
+    }
+}
+configurations {
+    integrationTestImplementation.extendsFrom implementation, testImplementation
+    integrationTestRuntime.extendsFrom runtime, testRuntime
+}
+
+task integration(type: Test) {
+    description = 'Runs the integration tests.'
+    group = 'verification'
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testCompileOnly 'org.projectlombok:lombok:1.18.10'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.10'
+    compile(group: 'org.apache.commons', name: 'commons-lang3', version: '3.9')
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testCompile group: 'com.github.tomakehurst', name: 'wiremock', version: '2.26.3'
+    testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '2.2.2.RELEASE'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+integration {
+    useJUnitPlatform()
+}
